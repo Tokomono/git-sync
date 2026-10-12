@@ -1,0 +1,23 @@
+{
+    "name": "tokomono/git-sync",
+    "description": "Sync AI Suite overrides to Git via Pull Requests",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Tokomono\\GitSync\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Tokomono\\GitSync\\Providers\\GitSyncServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0",
+        "illuminate/http": "^11.0"
+    }
+}
