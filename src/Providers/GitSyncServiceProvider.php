@@ -4,8 +4,8 @@ namespace Tokomono\GitSync\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Tokomono\GitSync\Contracts\GitProviderInterface;
-use Tokomono\GitSync\Services\GitHubProvider;
 use Tokomono\GitSync\Services\BitbucketProvider;
+use Tokomono\GitSync\Services\GitHubProvider;
 
 class GitSyncServiceProvider extends ServiceProvider
 {

@@ -2,7 +2,7 @@
     "name": "tokomono/git-sync",
     "description": "Sync AI Suite overrides to Git via Pull Requests",
     "type": "library",
-    "license": "MIT",
+    "license": "proprietary",
     "autoload": {
         "psr-4": {
             "Tokomono\\GitSync\\": "src/"
@@ -17,7 +17,7 @@
     },
     "require": {
         "php": "^8.2",
-        "illuminate/support": "^11.0",
-        "illuminate/http": "^11.0"
+        "illuminate/support": ">=11.0",
+        "illuminate/http": ">=11.0"
     }
 }

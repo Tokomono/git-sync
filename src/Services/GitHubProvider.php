@@ -2,9 +2,9 @@
 
 namespace Tokomono\GitSync\Services;
 
+use Exception;
 use Illuminate\Support\Facades\Http;
 use Tokomono\GitSync\Contracts\GitProviderInterface;
-use Exception;
 
 /**
  * GitHub API Service Provider for Git-Sync
@@ -20,12 +20,13 @@ use Exception;
  *    GITHUB_REPOSITORY=your-organization/your-repo-name
  *
  * HOW TO TEST LOCALLY:
- * We use the GitHub REST API v3. 
+ * We use the GitHub REST API v3.
  * Endpoint: https://api.github.com
  */
 class GitHubProvider implements GitProviderInterface
 {
     protected array $config;
+
     protected string $baseUrl = 'https://api.github.com';
 
     public function __construct(array $config)
@@ -40,28 +41,28 @@ class GitHubProvider implements GitProviderInterface
                 'Accept' => 'application/vnd.github.v3+json',
                 'X-GitHub-Api-Version' => '2022-11-28',
             ])
-            ->baseUrl($this->baseUrl . '/repos/' . $this->config['repository'] . '/');
+            ->baseUrl($this->baseUrl.'/repos/'.$this->config['repository'].'/');
     }
 
     public function createBranch(string $sourceBranch, string $newBranch): void
     {
         // 1. Get the SHA of the source branch
         $response = $this->client()->get("git/ref/heads/{$sourceBranch}");
-        
-        if (!$response->successful()) {
-            throw new Exception("Could not fetch source branch {$sourceBranch} from GitHub: " . $response->body());
+
+        if (! $response->successful()) {
+            throw new Exception("Could not fetch source branch {$sourceBranch} from GitHub: ".$response->body());
         }
 
         $sha = $response->json('object.sha');
 
         // 2. Create the new branch
-        $createResponse = $this->client()->post("git/refs", [
+        $createResponse = $this->client()->post('git/refs', [
             'ref' => "refs/heads/{$newBranch}",
             'sha' => $sha,
         ]);
 
-        if (!$createResponse->successful()) {
-            throw new Exception("Could not create new branch {$newBranch} on GitHub: " . $createResponse->body());
+        if (! $createResponse->successful()) {
+            throw new Exception("Could not create new branch {$newBranch} on GitHub: ".$createResponse->body());
         }
     }
 
@@ -69,7 +70,7 @@ class GitHubProvider implements GitProviderInterface
     {
         // GitHub API requires the SHA of the file if it already exists, to overwrite it.
         $fileResponse = $this->client()->get("contents/{$filePath}", [
-            'ref' => $branch
+            'ref' => $branch,
         ]);
 
         $sha = null;
@@ -89,22 +90,22 @@ class GitHubProvider implements GitProviderInterface
 
         $commitResponse = $this->client()->put("contents/{$filePath}", $payload);
 
-        if (!$commitResponse->successful()) {
-            throw new Exception("Could not commit file {$filePath} to GitHub: " . $commitResponse->body());
+        if (! $commitResponse->successful()) {
+            throw new Exception("Could not commit file {$filePath} to GitHub: ".$commitResponse->body());
         }
     }
 
     public function createPullRequest(string $sourceBranch, string $targetBranch, string $title, string $description): string
     {
-        $response = $this->client()->post("pulls", [
+        $response = $this->client()->post('pulls', [
             'title' => $title,
             'head' => $sourceBranch,
             'base' => $targetBranch,
             'body' => $description,
         ]);
 
-        if (!$response->successful()) {
-            throw new Exception("Could not create Pull Request on GitHub: " . $response->body());
+        if (! $response->successful()) {
+            throw new Exception('Could not create Pull Request on GitHub: '.$response->body());
         }
 
         return $response->json('html_url');
